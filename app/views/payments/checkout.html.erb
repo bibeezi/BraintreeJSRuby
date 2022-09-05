@@ -1,6 +1,3 @@
-<%# <h1>Payments#checkout</h1>
-<p>Find me in app/views/payments/checkout.html.erb</p> %>
-
 <head>
     <meta charset="utf-8">
     <script src="https://js.braintreegateway.com/web/dropin/1.33.3/js/dropin.min.js"></script>
@@ -19,10 +16,42 @@
         <div id="paypal-button"></div>
         <input id="submit-button" type="submit" value="Purchase"/>
         <input type="hidden" id="nonce" name="payment_method_nonce"/>
+        <input type="hidden" id="deviceData" name="device_data"/>
     <% end %>
 
     <script type="text/javascript">
         const form = document.getElementById('payment-form');
+
+        // 3DSecure
+        var threeDSecureParameters = {
+            amount: '10.00',
+            email: 'test@example.com',
+            billingAddress: {
+                givenName: 'Jill', // ASCII-printable characters required, else will throw a validation error
+                surname: 'Doe', // ASCII-printable characters required, else will throw a validation error
+                phoneNumber: '8101234567',
+                streetAddress: '555 Smith St.',
+                extendedAddress: '#5',
+                locality: 'Oakland',
+                region: 'CA',
+                postalCode: '12345',
+                countryCodeAlpha2: 'US'
+            },
+            additionalInformation: {
+                workPhoneNumber: '8101234567',
+                shippingGivenName: 'Jill',
+                shippingSurname: 'Doe',
+                shippingPhone: '8101234567',
+                shippingAddress: {
+                streetAddress: '555 Smith St.',
+                extendedAddress: '#5',
+                locality: 'Oakland',
+                region: 'CA',
+                postalCode: '12345',
+                countryCodeAlpha2: 'US'
+                }
+            },
+        };
 
         // Step two: create a dropin instance using that container (or a string
         //   that functions as a query selector such as `#dropin-container`)
@@ -33,24 +62,49 @@
             paypal: {
                 flow: 'checkout',
                 amount: '10.00',
-                currency: 'USD'
-            }
+                currency: 'EUR',
+                buttonStyle: {
+                    color: 'blue',
+                    shape: 'rect',
+                    size: 'medium'
+                },
+            },
+            threeDSecure: true,
+            dataCollector: true,
+            locale: "en-GB"
+            // translations: {
+            //     expirationDateLabel: "Expiry Date"
+            // }
         }, (error, dropinInstance) => {
+            // Handle any errors that might've occurred when creating Drop-in
+            if(error) {
+                console.error(error);
+                return;
+            }
 
             form.addEventListener('submit', () => {
                 event.preventDefault();
 
                 // Use `dropinInstance` here
                 // Methods documented at https://braintree.github.io/braintree-web-drop-in/docs/current/Dropin.html
-                dropinInstance.requestPaymentMethod((error, payload) => {
-                    if(error) console.log("ERROR: " + error);
+                dropinInstance.requestPaymentMethod({
+                    threeDSecure: threeDSecureParameters
+                }, (error, payload) => {
+                    // Handle errors in requesting payment method
+                    if(error) {
+                        console.error(error);
+                        return;
+                    }
 
                     // Step four: when the user is ready to complete their
                     //   transaction, use the dropinInstance to get a payment
                     //   method nonce for the user's selected payment method, then add
                     //   it to a the hidden field before submitting the complete form to
-                    //   a server-side integration
+                    //   a server-side integration.
+                    // The 3D Secure Authentication ID can be found
+                    //  at payload.threeDSecureInfo.threeDSecureAuthenticationId
                     document.getElementById('nonce').value = payload.nonce;
+                    document.getElementById('deviceData').value = payload.deviceData;
                     form.submit();
                 });
             });
