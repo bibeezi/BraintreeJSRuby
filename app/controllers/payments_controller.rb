@@ -9,27 +9,13 @@ class PaymentsController < ApplicationController
   def nonce
     # nonce from post request
     nonce_from_the_client = params[:payment_method_nonce]
-    device_data = params[:device_data]
 
     # create transaction with payment information
     result = @gateway.transaction.sale(
       :amount => "10.00",
       :payment_method_nonce => nonce_from_the_client,
-      :device_data => device_data,
-      # Specify merchant account ID
-      # :merchant_account_id => "MAID"
-      # 
-      # To add a new payment method token to a customerID
-      # :customer_id => "cust_id"
-      #
-      # To add a new customer with a new payment method token
-      # :customer => {
-      #   :id => "cust_id"
-      # }
       :options => {
-        :submit_for_settlement => true,
-        # To vault on success
-        :store_in_vault_on_success => true
+        :submit_for_settlement => true
       }
     )
 

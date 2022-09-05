@@ -1,7 +1,7 @@
 <head>
     <meta charset="utf-8">
-    <script src="https://js.braintreegateway.com/web/dropin/1.33.3/js/dropin.min.js"></script>
     <!-- Load the client component. -->
+    <script src="https://js.braintreegateway.com/web/dropin/1.33.3/js/dropin.min.js"></script>
     <script src="https://js.braintreegateway.com/web/3.85.5/js/client.min.js"></script>
     <script src="https://js.braintreegateway.com/web/3.85.5/js/paypal-checkout.min.js"></script>
 </head>
@@ -16,42 +16,10 @@
         <div id="paypal-button"></div>
         <input id="submit-button" type="submit" value="Purchase"/>
         <input type="hidden" id="nonce" name="payment_method_nonce"/>
-        <input type="hidden" id="deviceData" name="device_data"/>
     <% end %>
 
     <script type="text/javascript">
         const form = document.getElementById('payment-form');
-
-        // 3DSecure
-        var threeDSecureParameters = {
-            amount: '10.00',
-            email: 'test@example.com',
-            billingAddress: {
-                givenName: 'Jill', // ASCII-printable characters required, else will throw a validation error
-                surname: 'Doe', // ASCII-printable characters required, else will throw a validation error
-                phoneNumber: '8101234567',
-                streetAddress: '555 Smith St.',
-                extendedAddress: '#5',
-                locality: 'Oakland',
-                region: 'CA',
-                postalCode: '12345',
-                countryCodeAlpha2: 'US'
-            },
-            additionalInformation: {
-                workPhoneNumber: '8101234567',
-                shippingGivenName: 'Jill',
-                shippingSurname: 'Doe',
-                shippingPhone: '8101234567',
-                shippingAddress: {
-                streetAddress: '555 Smith St.',
-                extendedAddress: '#5',
-                locality: 'Oakland',
-                region: 'CA',
-                postalCode: '12345',
-                countryCodeAlpha2: 'US'
-                }
-            },
-        };
 
         // Step two: create a dropin instance using that container (or a string
         //   that functions as a query selector such as `#dropin-container`)
@@ -69,8 +37,6 @@
                     size: 'medium'
                 },
             },
-            threeDSecure: true,
-            dataCollector: true,
             locale: "en-GB"
             // translations: {
             //     expirationDateLabel: "Expiry Date"
@@ -104,7 +70,6 @@
                     // The 3D Secure Authentication ID can be found
                     //  at payload.threeDSecureInfo.threeDSecureAuthenticationId
                     document.getElementById('nonce').value = payload.nonce;
-                    document.getElementById('deviceData').value = payload.deviceData;
                     form.submit();
                 });
             });
