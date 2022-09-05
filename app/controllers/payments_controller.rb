@@ -28,7 +28,7 @@ class PaymentsController < ApplicationController
       # }
       :options => {
         :submit_for_settlement => true,
-        # To vault on success
+        # To vault payment method token and/or existing/new customer on success
         :store_in_vault_on_success => true
       }
     )
