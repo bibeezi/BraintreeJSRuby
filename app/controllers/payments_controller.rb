@@ -6,10 +6,25 @@ class PaymentsController < ApplicationController
     )
   end
 
+<<<<<<< HEAD
   def subscription
     # create subscription with payment information
     result = @gateway.subscription.create(
       :payment_method_token => "token"
+=======
+  def nonce
+    # nonce from post request
+    nonce_from_the_client = params[:payment_method_nonce]
+    device_data = params[:device_data]
+
+    # create transaction with payment information
+    result = @gateway.transaction.sale(
+      :amount => "10.00",
+      :payment_method_nonce => nonce_from_the_client,
+      :device_data => device_data,
+      :options => {
+        :submit_for_settlement => true
+      }
     )
 
     # set up json response
