@@ -6,5 +6,5 @@ Rails.application.routes.draw do
   # root "articles#index"
 
   root 'payments#checkout'
-  post '/payments/nonce'
+  post '/payments/transaction'
 end

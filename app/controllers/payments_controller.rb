@@ -6,13 +6,7 @@ class PaymentsController < ApplicationController
     )
   end
 
-<<<<<<< HEAD
-  def subscription
-    # create subscription with payment information
-    result = @gateway.subscription.create(
-      :payment_method_token => "token"
-=======
-  def nonce
+  def transaction
     # nonce from post request
     nonce_from_the_client = params[:payment_method_nonce]
     device_data = params[:device_data]
@@ -22,13 +16,17 @@ class PaymentsController < ApplicationController
       :amount => "10.00",
       :payment_method_nonce => nonce_from_the_client,
       :device_data => device_data,
+      :custom_fields => {
+        :country => "Sweden"
+      },
       :options => {
-        :submit_for_settlement => true
+        :submit_for_settlement => true,
+        :store_in_vault_on_success => true
       }
     )
 
     # set up json response
-    response = {:success => result.success?}
+    response = {:success => result.transaction.custom_fields}
 
     # error handling
     if result.success?
