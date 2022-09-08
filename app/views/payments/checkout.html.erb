@@ -1,14 +1,14 @@
 <head>
     <meta charset="utf-8">
-    <script src="https://js.braintreegateway.com/web/dropin/1.33.3/js/dropin.min.js"></script>
     <!-- Load the client component. -->
+    <script src="https://js.braintreegateway.com/web/dropin/1.33.3/js/dropin.min.js"></script>
     <script src="https://js.braintreegateway.com/web/3.85.5/js/client.min.js"></script>
     <script src="https://js.braintreegateway.com/web/3.85.5/js/paypal-checkout.min.js"></script>
 </head>
 <body>
 
     <!-- Step one: add an empty container to your page -->
-    <%= form_tag("/payments/nonce", method: "post", id: "payment-form") do %>
+    <%= form_tag("/payments/transaction", method: "post", id: "payment-form") do %>
         <!-- Putting the empty container you plan to pass to
         `braintree.dropin.create` inside a form will make layout and flow
         easier to manage -->
@@ -21,37 +21,6 @@
 
     <script type="text/javascript">
         const form = document.getElementById('payment-form');
-
-        // 3DSecure
-        var threeDSecureParameters = {
-            amount: '10.00',
-            email: 'test@example.com',
-            billingAddress: {
-                givenName: 'Jill', // ASCII-printable characters required, else will throw a validation error
-                surname: 'Doe', // ASCII-printable characters required, else will throw a validation error
-                phoneNumber: '8101234567',
-                streetAddress: '555 Smith St.',
-                extendedAddress: '#5',
-                locality: 'Oakland',
-                region: 'CA',
-                postalCode: '12345',
-                countryCodeAlpha2: 'US'
-            },
-            additionalInformation: {
-                workPhoneNumber: '8101234567',
-                shippingGivenName: 'Jill',
-                shippingSurname: 'Doe',
-                shippingPhone: '8101234567',
-                shippingAddress: {
-                streetAddress: '555 Smith St.',
-                extendedAddress: '#5',
-                locality: 'Oakland',
-                region: 'CA',
-                postalCode: '12345',
-                countryCodeAlpha2: 'US'
-                }
-            },
-        };
 
         // Step two: create a dropin instance using that container (or a string
         //   that functions as a query selector such as `#dropin-container`)
@@ -69,8 +38,6 @@
                     size: 'medium'
                 },
             },
-            threeDSecure: true,
-            dataCollector: true,
             locale: "en-GB"
             // translations: {
             //     expirationDateLabel: "Expiry Date"
@@ -87,9 +54,7 @@
 
                 // Use `dropinInstance` here
                 // Methods documented at https://braintree.github.io/braintree-web-drop-in/docs/current/Dropin.html
-                dropinInstance.requestPaymentMethod({
-                    threeDSecure: threeDSecureParameters
-                }, (error, payload) => {
+                dropinInstance.requestPaymentMethod((error, payload) => {
                     // Handle errors in requesting payment method
                     if(error) {
                         console.error(error);
