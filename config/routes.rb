@@ -7,4 +7,5 @@ Rails.application.routes.draw do
 
   root 'payments#checkout'
   post '/payments/transaction'
+  post '/payments/subscription'
 end
