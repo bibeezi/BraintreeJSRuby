@@ -103,6 +103,8 @@
                     //   a server-side integration.
                     // The 3D Secure Authentication ID can be found
                     //  at payload.threeDSecureInfo.threeDSecureAuthenticationId
+
+                    console.log(payload.nonce);
                     document.getElementById('nonce').value = payload.nonce;
                     document.getElementById('deviceData').value = payload.deviceData;
                     form.submit();

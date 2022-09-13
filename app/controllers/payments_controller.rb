@@ -22,7 +22,7 @@ class PaymentsController < ApplicationController
     )
 
     # set up json response
-    response = {:success => result.success?}
+    response = {:success => result}
 
     # error handling
     if result.success?
